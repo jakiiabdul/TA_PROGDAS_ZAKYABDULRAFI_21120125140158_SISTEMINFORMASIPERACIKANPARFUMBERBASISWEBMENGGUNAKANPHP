@@ -1,23 +1,19 @@
-
 <?php
 class Parfum {
     public $nama;
     public $top;
     public $middle;
     public $base;
-    public $ukuran;
 
-    public function __construct($nama, $top, $middle, $base, $ukuran) {
+    public function __construct($nama, $top, $middle, $base) {
         $this->nama = $nama;
         $this->top = $top;
         $this->middle = $middle;
         $this->base = $base;
-        $this->ukuran = $ukuran;
     }
 
     public function infoRacikan() {
         return "<h3>$this->nama</h3>
-                <p>Ukuran: {$this->ukuran}ml</p>
                 <p>Top: $this->top</p>
                 <p>Middle: $this->middle</p>
                 <p>Base: $this->base</p>";
@@ -30,16 +26,6 @@ $hargaTop = ["Citrus" => 3500, "Mint" => 3000, "Lemon" => 3000];
 $hargaMiddle = ["Rose" => 3500, "Jasmine" => 4000, "Lavender" => 4500];
 $hargaBase = ["Musk" => 4000, "Vanilla" => 5000, "Amber" => 4500];
 
-
-$ukuranOptions = [10, 20, 30, 40, 50];
-$botolperkalian = [
-    10 => 1,
-    20 => 2,
-    30 => 3,
-    40 => 4,
-    50 => 5,
-];
-
 $topNotes = array_keys($hargaTop);
 $middleNotes = array_keys($hargaMiddle);
 $baseNotes = array_keys($hargaBase);
@@ -50,13 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $top = $_POST["top"];
     $middle = $_POST["middle"];
     $base = $_POST["base"];
-    $ukuran = (int)$_POST["ukuran"];
 
-    $botolUkuran = $hargaBotol * $botolperkalian[$ukuran];
+    $totalHarga = $hargaBotol + $hargaTop[$top] + $hargaMiddle[$middle] + $hargaBase[$base];
 
-    $totalHarga = $botolUkuran + $hargaTop[$top] + $hargaMiddle[$middle] + $hargaBase[$base];
-
-    $racikan = new Parfum($nama, $top, $middle, $base, $ukuran);
+    $racikan = new Parfum($nama, $top, $middle, $base);
     $hasil = $racikan->infoRacikan() .
              "<p><strong>Total Harga:</strong> Rp " . number_format($totalHarga, 0, ',', '.') . "</p>";
 }
@@ -106,12 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Mix Parfum</h2>
     <form method="post">
         <input type="text" name="nama" placeholder="Nama Racikan" required>
-
-        
-        <label>Ukuran (ml):</label>
-        <select name="ukuran" required>
-            <?php foreach ($ukuranOptions as $u) echo "<option value=\"$u\">$u ml</option>"; ?>
-        </select>
 
         <label>Top Note:</label>
         <select name="top">
